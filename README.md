@@ -8,17 +8,6 @@
 
 - Open the folder and open the _"CC-intro-rmarkdown.Rproj"_ file. This should open an instance of RStudio
 
-- Upon opening the `rap-skeleton.Rproj` file for the first time you should see a message in the console similar to:
-
-```
-# Bootstrapping renv 1.0.7 ---------------------------------------------------
-- Downloading renv ... OK
-- Installing renv  ... OK
-
-- Project 'C:/.../34-rap-skeleton/rap-skeleton-dev' loaded. [renv 1.0.7]
-- One or more packages recorded in the lockfile are not installed.
-- Use `renv::status()` for more details.
-```
 - Next open the `renv_setup.R` script and follow the steps within titled `renv::restore()` and `renv::status()`. If successful, renv should now be activated and all required packages should be available.
 
 - When setting up renv within this project, you may see error lines printed to console similar to: 
