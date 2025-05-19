@@ -21,8 +21,8 @@ bilingual <- TRUE
 # THESE SHOULD BE UPDATED FOR EACH NEW PUBLICATION
 
 currentyear <- 2024
-title <- "NISRA Technology & Support Lab RAP Skeleton Demo Report"
-subtitle <- "Version Two"
+title <- "NISRA Introduction to R Markdown"
+subtitle <- ""
 
 ##### HEADER ######
 # Select the Statistic type for the report - select from the list of five below
