@@ -1,0 +1,495 @@
+---
+title: "NISRA Technology & Support Lab Introduction to R Markdown"
+lang: "en"
+output:
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true 
+    toc_depth: 4
+    code_download: no
+    css: "../style.css"
+knit: (function(input, ...) {
+    rmarkdown::render(
+      input,
+       output_dir = "../demo/demo_outputs/",
+        output_file = paste0(
+        xfun::sans_ext(input), '_', format(Sys.time(), "%d-%m-%Y_%H%M") , '.html'
+      ),
+      envir = globalenv()
+    )
+  })
+---
+
+<div id = "cookie-banner"></div>
+<script src = "cookies_script.js"></script>
+
+```{r settings, include=FALSE}
+# this chunk sets chunk options for all chunks in this file
+knitr::opts_chunk$set(
+  message = FALSE, warning = FALSE, echo = FALSE
+)
+```
+
+```{r setup, warnings = FALSE}
+library(here)
+
+source(paste0(here(), "/code/config.R"))
+source(paste0(here(), "/code/demo/demo_data_prep.R"))
+
+```
+
+<div data-nics-theme="`r nicstheme`">
+
+<!-- calling the banner code -->
+`r f_banner()`
+
+<!-- Header section -->
+`r f_header()`
+
+<!-- Introduction section -->
+
+<!-- open main div -->
+<div id="main" role="main">
+
+<!-- calling the borderline code -->
+`r f_borderline()`
+    
+## 1. Introduction (h2)
+
+### What is R Markdown? (h3)
+
+**R Markdown** is a special kind of document that allows you to combine **text, code, and the results of that code** all in one place. Think of it as a smart report-writing tool that mixes a word processor with a coding environment.
+
+You write your report using simple formatting rules (called *Markdown*) to make text bold, add headings, or create bullet points. Then, you can include chunks of **R code** (a statistical programming language) that do things like load data, create charts, or run calculations.
+
+When you're finished, you can "knit" the document to automatically generate a polished report in formats like **HTML**, **PDF**, or **Word**. The final output shows your text along with the results of your code—like tables, charts, or summaries—making it perfect for creating dynamic reports, dashboards, or presentations.
+
+### Why is R Markdown useful? (h3)
+
+- ✅ **Reproducibility**: The data analysis and explanation are in one file, so anyone can rerun it and get the same results.  
+- 📊 **Dynamic reporting**: If the data changes, you can simply rerun the document to update all your results and visuals.  
+- 🧹 **Cleaner workflow**: Instead of copying and pasting charts or tables into Word, R Markdown generates everything automatically.
+
+### What does "knit" mean? (h3)
+
+When you click the **Knit** button in RStudio, R Markdown processes your document and generates the output (e.g., an HTML report). It runs all code chunks, captures the output, and merges it with the text into a polished report.
+
+### Understanding the YAML Header in R Markdown (h3)
+
+The section at the top of an `.Rmd` file enclosed by `---` is called the **YAML header**. It controls how your R Markdown document behaves and is rendered. Here's a breakdown of what each line in the example does:
+
+```yaml
+---
+title: "NISRA Technology & Support Lab Introduction to R Markdown"
+```
+- **`title`**: Sets the title of the report. This appears at the top of the output and in the browser tab if knitting to HTML.
+
+```yaml
+lang: "en"
+```
+- **`lang`**: Specifies the document language for accessibility and web standards. `"en"` means English.
+
+```yaml
+output:
+  html_document:
+```
+- Declares the output format — in this case, an HTML document.
+
+### HTML Document Options:
+
+```yaml
+    code_folding: hide
+```
+- Enables collapsible R code chunks in the HTML. They start hidden but can be shown by the user.
+
+```yaml
+    toc: true
+```
+- Includes a **Table of Contents (TOC)** in the output document.
+
+```yaml
+    toc_float: true
+```
+- Makes the TOC float on the page as you scroll, for easier navigation.
+
+```yaml
+    toc_depth: 4
+```
+- Controls how many header levels (e.g., `##`, `###`, `####`) are shown in the TOC.
+
+```yaml
+    code_download: no
+```
+- Hides the “download code” button in the HTML to keep the output tidy.
+
+```yaml
+    css: "../style.css"
+```
+- Links to a custom **CSS stylesheet** to control visual styles like colors, fonts, and spacing.
+
+#### Using a CSS Stylesheet in an R Markdown Project (h4)
+
+In R Markdown, you can **fully customise the visual style** of your report by linking to a **CSS (Cascading Style Sheets)** file. CSS is a language used in web development to control the appearance of HTML elements — including fonts, colors, spacing, borders, and layout.
+
+When you knit an R Markdown document to **HTML**, the output is a web page. By linking a CSS file, you can override the default styles and apply your own branding or formatting rules.
+
+##### Why Use a CSS Stylesheet?
+
+Using a custom CSS stylesheet allows you to:
+
+- Apply **organisational branding** (e.g. colours, logos, font sizes).
+- Keep formatting consistent across multiple documents.
+- Adjust layout and spacing for a more readable or print-friendly output.
+- Enhance accessibility or mobile responsiveness.
+
+##### Example: What Can Be Styled?
+
+Here are some examples of what you can control using CSS in an R Markdown project:
+
+| Element           | Example CSS Style                                           |
+|------------------|-------------------------------------------------------------|
+| Headings          | `h1 { color: navy; font-size: 32px; }`                      |
+| Paragraphs        | `p { line-height: 1.6; font-family: Arial; }`              |
+| Code chunks       | `.r { background-color: #f9f9f9; padding: 10px; }`         |
+| Table borders     | `table, th, td { border: 1px solid #ccc; }`                |
+| Banner sections   | `.banner { background-color: #003366; color: white; }`     |
+| Download buttons  | `.download-btn { border-radius: 5px; padding: 8px; }`      |
+
+##### Additional Resources
+
+- [W3Schools CSS Tutorial](https://www.w3schools.com/css/)
+- [R Markdown HTML Styling Guide (RStudio)](https://bookdown.org/yihui/rmarkdown/html-document.html)
+
+Custom CSS gives you fine-grained control over how your R Markdown outputs look—allowing you to go beyond the defaults and create professional, branded, and user-friendly reports.
+
+### Custom Knit Function
+
+```yaml
+knit: (function(input, ...) {
+    rmarkdown::render(
+      input,
+      output_dir = "../demo/demo_outputs/",
+      output_file = paste0(
+        xfun::sans_ext(input), '_', format(Sys.time(), "%d-%m-%Y_%H%M") , '.html'
+      ),
+      envir = globalenv()
+    )
+  })
+```
+
+This custom function controls how and where the document is saved:
+
+- **`rmarkdown::render()`**: The function that performs the knitting/rendering.
+- **`output_dir`**: Saves the file in a specific folder (`../demo/demo_outputs/`).
+- **`output_file`**: Names the output file using the original filename and adds a timestamp, e.g., `myreport_19-05-2025_1542.html`, so previous versions aren’t overwritten.
+- **`envir = globalenv()`**: Runs the code in the global environment so it has access to previously loaded data.
+
+---
+
+This YAML setup is useful for producing professional, branded reports in HTML that are easy to navigate, consistent in layout, and automatically versioned for tracking changes.
+
+
+### Functions (h3)
+
+In R, a function is a named block of code that performs a specific task and can be reused throughout a script or document. The functions shown above are custom-built to modularise and simplify the layout and styling of the RMarkdown report. When called within the RMarkdown file, they dynamically generate reusable HTML components—such as banners (f_banner), headers (f_header), styled comment boxes (f_comment_box), download sections, or contact blocks—based on the data or theme passed in. This approach helps keep the RMarkdown document clean, consistent, and easy to maintain, especially when the same elements appear in multiple places.
+
+`r f_borderline()`
+
+## 2. Text Presentation (h2)
+
+### What is Markdown? (h3)
+
+Markdown is a simple formatting language used in R Markdown to create clean, readable text with lightweight syntax:
+
+- "#" To denote headings 
+- **Bold**, *Italic*
+- [Link text](https://www.nisra.gov.uk/publications/2022-mid-year-population-estimates-northern-ireland)
+- `Inline code`
+
+### This is an ordered list (h3)
+
+#### Local Government Districts (h4)
+
+  1. Antrim and Newtownabbey (no ampersand).
+  2. Ards and North Down.
+  3. Armagh City, Banbridge and Craigavon.
+  4. Belfast.
+  5. Causeway Coast and Glens.
+  6. Derry and Strabane.
+  7. Fermanagh and Omagh.
+  8. Lisburn and Castlereagh.
+  9. Mid and East Antrim.
+  10. Mid Ulster.
+  11. Newry, Mourne and Down.
+  
+### This is an unordered list (h3)
+
+#### Former administrative and statistical geographies (h4)
+
+  -	Parliamentary Constituencies (Assembly Areas). 
+  -	Health & Social Care Trusts. 
+  -	The former Education & Library Boards. 
+  -	The former Health & Social Services Boards.
+  - The former NUTS-III areas. 
+  -	The former 582 Electoral Wards.
+
+`r f_borderline()`
+
+## 3. Code Chunks (h2)
+
+### What is a Code Chunk? (h3)
+
+In R Markdown, a **code chunk** is a section of your document where you can write and run **R code**. These chunks are enclosed by triple backticks and curly braces like this:
+
+    ```{r}
+    # Your R code here
+    summary(cars)
+    ```
+
+When you **knit** the document, the code inside the chunk is executed and both the code **and its output** (such as a plot, table, or summary) are inserted into your final document.
+
+Code chunks are powerful because they allow you to:
+- Run live analysis directly inside your report.
+- Keep your text and results **synchronised and reproducible**.
+- Use options to control how much code or output is shown (e.g. hide warnings, format plots, etc.).
+
+They are the heart of dynamic reporting in R Markdown.
+
+### Common Code Chunk Options (h3)
+
+When writing code chunks in R Markdown, you can use **chunk options** to control how your code and its output appear in the final document. These options are placed within the curly braces at the start of the chunk.
+
+#### Example Chunk
+### Example: How to write a code chunk in R Markdown
+
+```{r example-chunk, echo = TRUE, message = FALSE, warning = FALSE, fig.width = 7, fig.height = 4}
+# Example code that would generate a plot
+plot(cars)
+```
+
+#### Explanation of Options
+
+- `**echo = TRUE**`: Shows the code in the final output.
+- `**message = FALSE**`: Hides messages produced by packages or functions (e.g. when loading libraries).
+- `**warning = FALSE**`: Suppresses any warning messages that might occur during code execution.
+- `**fig.width / fig.height**`: Sets the width and height (in inches) for plots generated by this chunk.
+
+These options help keep your output **clean**, **readable**, and **tailored** to your audience—especially if you don’t want to show all the technical details.
+
+## 4. Tables (h2)
+
+### Basic table (h3)
+
+R code chunks are embedded in RMarkdown documents using triple backticks and curly braces (```{r}). These chunks allow you to run R code directly within the document and display its results in the output. When rendering to HTML, the output from these chunks—such as tables, plots, or summaries—can be styled and formatted using packages like knitr and kableExtra. Code chunk options (e.g. echo, warning, message) control what is shown in the final HTML document, enabling clean presentation alongside interpretive text and headers.
+
+#### Table 1: Mid Ulster had the highest proportion of under 25s (h4)
+
+##### 1 Population of young people by LGD 
+ 
+```{r, echo = TRUE, warnings = FALSE, message = FALSE, out.width="100%"}
+# kable code needs to be created as a string to allow correct rendering of
+# source code on second tab
+
+kable(df_mye_latest_year_youthrate,
+
+  # left align text, right align numbers
+  align = ("lrrr"),
+
+  # full and descriptive headings
+  col.names = c(
+    "Local Government District (LGD)",
+    "Young people in LGD",
+    "Total population of LGD",
+    "Young people as percentage"
+  ),
+
+  # use caption to keep text associated with table
+  caption = paste0("Population of young people by Local Government District in NI, ", latest_year),
+
+  # add thousand separator
+  format.args = list(big.mark = ","),
+  label = NA
+) %>%
+  kable_styling()
+```
+
+`r f_borderline()`
+
+## 5. Charts (h2)
+
+### Adding Charts to HTML output in R Markdown
+
+Charts can be created directly within R code chunks in RMarkdown using visualization libraries such as plotly, ggplot2, or base R graphics. These code chunks execute R code to generate interactive or static plots, which are automatically embedded into the resulting HTML output. Options such as echo, message, and fig.alt help control the display of source code, suppress warnings, and provide alternative text for accessibility. Interactive plots (like the bar chart below created with plotly) allow users to explore the data visually within the HTML report.
+
+#### Figure 1: Proportion of under 25s was higher in `r earliest_year`.
+##### Percentage of population aged under 25 by LGD, `r earliest_year` MYEs
+
+Dashed line represents NI mean.
+
+```{r barchart_interactive, echo = TRUE, warnings = FALSE, message = FALSE, fig.alt="Figure 1 alt text example. More detail on the trends are included in the text directly above or below the chart, and data can be downloaded using the button below.", out.width="100%"}
+fig1 <- plot_ly(df_mye_earliest_youthrate,
+  x = ~earliest_youthrate,
+  y = ~lgd2014name,
+  type = "bar",
+  orientation = "h", # horizontal bars. Default is vertical
+  hoverinfo = "text",
+  # adds value labels to the bars and sets hover text
+  text = ~earliest_youthrate, textposition = "auto",
+  # sets colour of bars to navy
+  marker = list(color = nisra_navy)
+)
+# create annotation for y axis title so it can be horizontal.
+yaxistitle <- list(
+  x = -0.3, y = 1.06, # position of y axis title
+  text = "LGD", # title
+  showarrow = FALSE, xref = "paper", yref = "paper",
+  xanchor = "center", yanchor = "centre", # alignment
+  xshift = 0, yshift = 0,
+  font = list(family = "Arial Black", size = 14, color = "black")
+)
+
+# aesthetic definitions for vertical line used
+vline <- function(x = 0, color = nisra_navy) {
+  list(
+    type = "line",
+    y0 = 0,
+    y1 = 1,
+    yref = "paper",
+    x0 = x,
+    x1 = x,
+    line = list(color = color, dash = "dot")
+  )
+}
+
+fig1 <- fig1 %>%
+  layout( # add annotation
+    font = list(family = "Arial", size = 14),
+    annotations = list(yaxistitle),
+    xaxis = list(title = "Under 25s (%)"),
+    yaxis = list(
+      title = "",
+      ticks = "outside",
+      tickcolor = "#ffffff",
+      ticklen = 10,
+      categoryorder = "category descending"
+    )
+  ) %>%
+  # displays lgds in alphabetic order
+  config(fig1, displayModeBar = FALSE) %>%
+  layout(shapes = list(vline(~ mean(earliest_youthrate), color = nisra_blue)))
+
+fig1
+```
+
+`r f_borderline()`
+
+## 6. Download data (h2)
+
+### Download data buttons linked to charts/maps (h3)
+
+In the functions folder the 'make_tables' R Script contains a function called 'f_make_tables' that creates the Excel and CSV download buttons. The function generates a hyper-link that sits behind the download button and allows a user to click the button and download data from the corresponding chart into csv or excel format.  
+
+This function can be called after each figure and has 4 parameters fed into it - data (the data frame), title (the title to be given to the downloaded file), data_style (style applied to the excel file - styles can be viewed in the Style.R script) and data_dir (the file path the downloaded files should be stored in - in the example below the file path is set in the demo config file).  
+
+When the download buttons are clicked the excel or csv files are saved out to the 'figdata' folder. For figure 1 the code to call the f_make_tables function can be seen below when you select the show code button:
+
+```{r data_download_example, echo = TRUE}
+# call make tables function to create chart download buttons
+f_make_tables(
+  data = df_fig1_xls,
+  title = fig1_title,
+  data_style = ns_comma,
+  data_dir = paste0(here(), "/code/demo/demo_outputs/", "figdata/")
+)
+```  
+
+`r f_borderline()`
+
+## 7. Additional Resources (h2)
+
+The aim of this session is to highlight the functionality of R Markdown and give an idea of how it is currently being used in NISRA.
+
+This example report is a simplified version of the RAP Skeleton which has more examples of tables, charts and maps. The RAP Skeleton and instructions on how to use it can be found online: [RAP Skeleton](https://github.com/NISRA-Tech-Lab/rap-skeleton)
+
+In addition to the full RAP Skeleton, the Tech Lab have recently developed the RAP Skeleton Lite. This is a stripped back version of the full skeleton and is aimed more at those who want to update more simple documents, such as background quality reports, to HTML format. The RAP Skeleton Lite can be found online: [RAP Skeleton Lite](https://github.com/NISRA-Tech-Lab/rap-skeleton-lite)
+
+
+<!-- close main div -->
+</div>
+
+
+<!--html_preserve-->
+<!-- Footer section -->
+<footer style="color: #ffffff; background-color: #00205b;">
+	<div class="col-wide" data-analytics="footer">
+		<div class="row">
+			<div class="column left">
+				<footerheading>Links</footerheading>
+				<ul>
+				  <li><a href="https://www.nisra.gov.uk/" class="link" style="color: #ffffff">NISRA</a></li>
+	        <li><a href="https://www.nidirect.gov.uk" class="link" style="color: #ffffff">NIDirect</a></li>
+					<li><a href="https://www.gov.uk/" class="link" style="color: #ffffff">GOV.UK</a></li>
+					<li><a href="https://data.nisra.gov.uk/" class="link" style="color: #ffffff">NISRA Data Portal</a></li>
+					<li><a href="https://build.nisra.gov.uk/" class="link" style="color: #ffffff">Census Flexible Table Builder</a></li>
+				</ul>
+			</div>
+			<div class="column right">
+				<footerheading>Follow NISRA</h3></footerheading>
+				<ul>
+					<li><a href="https://www.facebook.com/nisra.gov.uk" class="link" style="color: #ffffff">Facebook</a></li>
+					<li><a href="https://twitter.com/NISRA" class="link" style="color: #ffffff">X (Twitter)</a></li>
+					<li><a href="https://www.youtube.com/user/nisrastats" class="link" style="color: #ffffff">YouTube</a></li>
+				</ul>
+			</div>
+		</div>
+		<div class="flex-list">
+			<ul>
+				<li><a href="https://www.nisra.gov.uk/crown-copyright" class="link" style="color: #ffffff">&copy Crown Copyright</a></li>
+				<li><a href="https://www.nisra.gov.uk/contact" class="link" style="color: #ffffff">Contact us</a></li>
+				<li><a href="https://www.nisra.gov.uk/terms-and-conditions" class="link" style="color: #ffffff">Terms and conditions</a></li>
+				<li><a href="https://www.nisra.gov.uk/cookies" class="link" style="color: #ffffff">Cookies</a></li>
+				<li><a href="https://www.nisra.gov.uk/nisra-privacy-notice" class="link" style="color: #ffffff">Privacy</a></li>
+				<li><a href="https://datavis.nisra.gov.uk/dissemination/accessibility-statement-visualisations.html" class="link" style="color: #ffffff">Accessibility Statement</a></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<!--/html_preserve-->
+
+<script>
+  // Create array of alt texts for map shapes
+  const map_alt = `r if (exists("map_alt")) {map_alt} else {"[]"}`;
+</script>
+
+```{js}
+
+// Function to remove map shapes from tab order, and add tabs to table of contents
+
+function tabOrder() {
+
+  // Removes tabs from individual map shapes and appends alt texts
+
+  var shapes = document.getElementsByClassName('leaflet-marker-icon leaflet-zoom-animated leaflet-interactive');
+
+  for (var i=0; i<shapes.length; i++) {
+    shapes[i].tabIndex = -1;
+    shapes[i].alt = map_alt[i];
+  }
+  
+  // Make side menu tabbable
+
+  var headings = document.getElementsByClassName('tocify-item list-group-item');
+  
+  for (let i = 0; i < headings.length; i ++) {
+    headings[i].innerHTML = "<a href='#" + headings[i].getAttribute("data-unique") + "'>" + headings[i].innerHTML +  "</a>";
+  }
+  
+};
+
+// Instruct web browser to run above function when loaded
+window.onload = tabOrder;
+```
+
+<!-- close data-nics-theme div -->
+</div>
